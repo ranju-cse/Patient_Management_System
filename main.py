@@ -47,7 +47,7 @@ class PatientUpdate(BaseModel):
         
 
 def load_data():
-    with open("patient.json", "r") as f:
+    with open("patient.json", "r") as f: 
         return json.load(f)
    
     
@@ -137,5 +137,12 @@ def update_patient(patient_id:str,patient_update:PatientUpdate):
   save_data(data)
   return JSONResponse(status_code=200,content={'message':'patient updated'})
   
-      
-  
+@app.delete('/delete/{patient_id}') 
+def delete_patient(patient_id:str):
+    #load data
+    data=load_data()
+    if patient_id not in data:
+        raise HTTPException(status_code=404,detail='Patient not found')
+    del data[patient_id]
+    save_data(data)
+    return JSONResponse(status_code=200,content={'message':'patient deleted'})
